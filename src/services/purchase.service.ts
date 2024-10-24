@@ -5,8 +5,14 @@ interface PurchaseResponse {
   newBalance: number;
 }
 
-export const purchaseItem = async (userId: number, itemId: number, itemPrice: number): Promise<PurchaseResponse> => {
-    const user = await getUserByEmail(userId);
+export const purchaseItem = async (
+    email: string, 
+    itemId: number, 
+    itemPrice: number
+): Promise<PurchaseResponse> => {
+
+    const user = await getUserByEmail(email);
+    const userId = user?.id || 0;
 
     if (!user) {
         throw new Error('User not found');

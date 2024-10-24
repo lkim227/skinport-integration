@@ -1,6 +1,8 @@
 export interface Item {
     id: number;
     name: string;
-    price_tradable: number | null;
-    price_non_tradable: number | null;
+    min_price: number | null;
+    max_price: number | null;
+    tradable_price: number | null;
+    non_tradable_price: number | null;
 }
