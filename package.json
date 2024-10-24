@@ -4,7 +4,7 @@
   "description": "Integration of Skinport API with a Node.js backend using TypeScript, PostgreSQL, Redis, and Docker.",
   "main": "dist/app.ts", 
   "scripts": {
-    "start": "node dist/app.ts", 
+    "start": "node dist/server.ts", 
     "build": "tsc",
     "test": "vitest --run",
     "test:unit": "vitest run tests/unit",
