@@ -1,9 +1,39 @@
 version: '3.8'
 services:
-  app: 
-    build:  .
+  app:
+    build: .
     ports:
       - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASS=password
+      - DB_NAME=datalouna
+      - REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
     volumes:
       - .:/app
       - /app/node_modules
+    command: >
+      ./wait-for-it.sh db:5432 -- npx knex migrate:latest && npm run start
+
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: datalouna
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  db_data:

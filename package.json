@@ -2,9 +2,9 @@
   "name": "skinport-integration",
   "version": "1.0.0",
   "description": "Integration of Skinport API with a Node.js backend using TypeScript, PostgreSQL, Redis, and Docker.",
-  "main": "dist/server.js", 
+  "main": "dist/app.ts", 
   "scripts": {
-    "start": "node dist/server.js", 
+    "start": "node dist/app.ts", 
     "build": "tsc",
     "test": "vitest --run",
     "test:unit": "vitest run tests/unit",
