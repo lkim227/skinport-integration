@@ -17,6 +17,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/dist
     command: npm run start
 
   migrate:
@@ -32,6 +33,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/dist
     command: npx knex migrate:latest
 
   db:
