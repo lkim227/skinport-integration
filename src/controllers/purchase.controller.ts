@@ -7,6 +7,9 @@ export const handlePurchase = async(req: Request, res: Response) => {
         const result = await purchaseItem(userId, itemId, price);
         res.json(result);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        if (error instanceof Error) 
+            res.status(400).json({ message: error.message });
+        else 
+            res.status(500).json({ message: 'Unknown error occured' });
     }
 }

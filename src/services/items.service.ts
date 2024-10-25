@@ -2,7 +2,11 @@ import axios from 'axios';
 import redisClient from '../db/redis';
 import { Item } from '../interfaces/item.interface';
 
-const SKINPORT_API_URL = process.env.SKINPORT_API_URL;
+const SKINPORT_API_URL = process.env.SKINPORT_API_URL || '';
+
+if (!SKINPORT_API_URL) {
+    throw new Error('SKINPORT_API_URL is not defined in environment variables');
+}
 
 export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
     const cachedItems = await redisClient.get('items');
@@ -20,6 +24,10 @@ export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
             }
         }
     );
+
+    if (!Array.isArray(response.data)) {
+        throw new Error('Invalid data format from Skinport API');
+    }
 
     const items: Item[] = response.data.map((item: Item) => ({
         name: item.name,

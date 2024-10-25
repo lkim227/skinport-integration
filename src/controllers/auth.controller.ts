@@ -7,7 +7,11 @@ export const login = async (req: Request, res: Response) => {
         const result = await authenticateUser(email, password);
         res.json(result);
     } catch (error) {
-        res.status(401).json({ message: error.message });
+        if (error instanceof Error) {
+            res.status(401).json({ message: error.message });
+        } else {
+            res.status(500).json({ message: 'Unknown error occurred' });
+        }
     }
 }
 
@@ -17,6 +21,10 @@ export const handleChangePassword = async (req: Request, res: Response) => {
         const result = await changePassword(userId, newPassword);
         res.json(result);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        if (error instanceof Error) {
+            res.status(401).json({ message: error.message });
+        } else {
+            res.status(500).json({ message: 'Unknown error occurred' });
+        }
     }
 }
