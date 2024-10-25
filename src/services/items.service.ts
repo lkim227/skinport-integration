@@ -30,10 +30,12 @@ export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
     }
 
     const items: Item[] = response.data.map((item: Item) => ({
+        id: item.id,
         name: item.name,
         min_price: item.non_tradable_price || null,
         max_price: item.tradable_price || null,
         tradable_price: item.tradable_price || null,
+        non_tradable_price: item.non_tradable_price || null
     }));
 
     await redisClient.set('items', JSON.stringify(items), { EX: 300 });
