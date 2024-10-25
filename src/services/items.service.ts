@@ -11,12 +11,15 @@ export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
         return JSON.parse(cachedItems) as Item[];
     }
 
-    const response = await axios.get<Item[]>(SKINPORT_API_URL, {
-        params: {
-            app_id: 730,
-            currency: 'EUR',
-        },
-    });
+    const response = await axios.get<Item[]>(
+        SKINPORT_API_URL, 
+        {
+            params: {
+                app_id: 730,
+                currency: 'EUR',
+            }
+        }
+    );
 
     const items: Item[] = response.data.map((item: Item) => ({
         name: item.name,

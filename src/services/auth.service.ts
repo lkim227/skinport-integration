@@ -1,5 +1,4 @@
 import { getUserByEmail, updateUserPassword } from '../models/user.model';
-// import { User } from '../interfaces/user.interface';
 
 interface AuthResponse {
     message: string;
@@ -28,8 +27,12 @@ export const authenticateUser = async (
     };
 };
 
-export const changePassword = async (userId: number, newPassword: string): Promise<string> => {
-  const user = await updateUserPassword(userId, newPassword);
-  if (!user) throw new Error('User not found');
-  return 'Password updated successfully';
+export const changePassword = async (
+    userId: number, 
+    newPassword: string
+): Promise<string> => {
+    const user = await updateUserPassword(userId, newPassword);
+    if (!user)   throw new Error('User not found');
+    
+    return 'Password updated successfully';
 };
