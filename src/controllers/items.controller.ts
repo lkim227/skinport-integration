@@ -4,6 +4,7 @@ import { fetchItemsFromSkinport } from "../services/items.service";
 export const getItems = async (req: Request, res: Response) => {
     try {
         const items = fetchItemsFromSkinport();
+        
         res.json(items);
     } catch (error) {
         if (error instanceof Error)

@@ -5,7 +5,6 @@ export const makePurchase = async (
     userId: number, 
     itemId: number
 ): Promise<Purchase | null> => {
-
     const purchase = await sql<Purchase[]>`
         INSERT INTO purchases (user_id, item_id)
         VALUES (${userId}, ${itemId})
@@ -13,5 +12,4 @@ export const makePurchase = async (
     `;
     
     return purchase[0] || null;
-
 };

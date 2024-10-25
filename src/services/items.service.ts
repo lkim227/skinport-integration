@@ -3,10 +3,15 @@ import redisClient from '../db/redis';
 import { Item } from '../interfaces/item.interface';
 
 const SKINPORT_API_URL = process.env.SKINPORT_API_URL || '';
+const SKINPORT_CLIENT_ID = process.env.SKINPORT_CLIENT_ID || '';
+const SKINPORT_CLIENT_SECRET = process.env.SKINPORT_CLIENT_SECRET || '';
 
-if (!SKINPORT_API_URL) {
-    throw new Error('SKINPORT_API_URL is not defined in environment variables');
+if (!SKINPORT_API_URL || !SKINPORT_CLIENT_ID || !SKINPORT_CLIENT_SECRET) {
+    throw new Error('Skinport API credentials are not defined in environment variables');
 }
+
+const encodedAuth = Buffer.from(`${SKINPORT_CLIENT_ID}:${SKINPORT_CLIENT_SECRET}`).toString('base64');
+const AUTH_HEADER = `Basic ${encodedAuth}`;
 
 export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
     const cachedItems = await redisClient.get('items');
@@ -18,9 +23,12 @@ export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
     const response = await axios.get<Item[]>(
         SKINPORT_API_URL, 
         {
+            headers: {
+                'Authorization': AUTH_HEADER
+            },
             params: {
                 app_id: 730,
-                currency: 'EUR',
+                currency: 'EUR'
             }
         }
     );
@@ -30,12 +38,10 @@ export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
     }
 
     const items: Item[] = response.data.map((item: Item) => ({
-        id: item.id,
-        name: item.name,
-        min_price: item.non_tradable_price || null,
-        max_price: item.tradable_price || null,
-        tradable_price: item.tradable_price || null,
-        non_tradable_price: item.non_tradable_price || null
+        market_hash_name: item.market_hash_name,
+        min_price: item.min_price || null,
+        max_price: item.max_price || null,
+        quantity: item.quantity ?? 0
     }));
 
     await redisClient.set('items', JSON.stringify(items), { EX: 300 });
