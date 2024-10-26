@@ -13,6 +13,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
 app.use('/auth', authRoutes);
 app.use('/items', itemsRoutes);
 app.use('/purchase', purchaseRoutes);

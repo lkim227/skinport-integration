@@ -1,21 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const JWT_SECRET:string = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+export const authenticate = (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const authHeader: string | undefined = req.headers.authorization;
+    
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(403).json({ message: 'Forbidden: Invalid or missing token' });
+        res.status(403).json({ message: 'Forbidden: Invalid or missing token' });
+        return Promise.resolve();
     }
     
     const token:string = authHeader.split(' ')[1];
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = decoded;
+        const decoded: string | JwtPayload = jwt.verify(token, JWT_SECRET);
+        res.locals.user = decoded;
         next();
+        return Promise.resolve();
     } catch (err) {
-        return res.status(403).json({ message: 'Forbidden: Invalid token' });
+        res.status(403).json({ message: 'Forbidden: Invalid token' });
+        return Promise.resolve();
     }
 };
