@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
-    "test": "vitest --run",
-    "test:unit": "vitest run tests/unit",
+    "test": "vitest run",
+    "test:unit": "vitest run src/**/*.test.ts",
     "test:e2e": "vitest run tests/e2e"
   },
   "repository": {
