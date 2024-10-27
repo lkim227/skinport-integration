@@ -1,5 +1,5 @@
 import { makePurchase } from '../models/purchase.model';
-import { getUserByEmail } from '../models/user.model';
+import { getUserByEmail, updateUserBalance } from '../models/user.model';
 
 interface PurchaseResponse {
   newBalance: number;
@@ -24,6 +24,8 @@ export const purchaseItem = async (
 
     const newBalance = user.balance - itemPrice;
     await makePurchase(userId, itemId);
+    // Deduct balance by purchasing
+    await updateUserBalance(userId, newBalance);
 
     return { newBalance };
 };

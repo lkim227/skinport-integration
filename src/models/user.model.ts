@@ -22,3 +22,16 @@ export const updateUserPassword = async (
 
     return updatedUser[0] || null;
 };
+
+// Update the user's balance after purchasing
+export const updateUserBalance = async (
+    userId: number, 
+    newBalance: number
+): Promise<User | null> => {
+    const updatedUser = await sql<User[]>`
+        UPDATE users SET balance = ${newBalance} WHERE id = ${userId}
+        RETURNING *;
+    `;
+
+    return updatedUser[0] || null;
+};

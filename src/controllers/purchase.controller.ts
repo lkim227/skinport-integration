@@ -5,6 +5,7 @@ export const handlePurchase = async(req: Request, res: Response) => {
     try {
         const { userId, itemId, price } = req.body;
         const result = await purchaseItem(userId, itemId, price);
+
         res.json(result);
     } catch (error) {
         if (error instanceof Error) 
