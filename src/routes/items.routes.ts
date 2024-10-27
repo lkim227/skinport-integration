@@ -4,6 +4,7 @@ import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
-router.get('/', authenticate, getItems);
+router.get('/', getItems);
+// router.get('/', authenticate, getItems);
 
 export { router as itemsRoutes };

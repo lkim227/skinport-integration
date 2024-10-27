@@ -13,11 +13,14 @@ if (!SKINPORT_API_URL || !SKINPORT_CLIENT_ID || !SKINPORT_CLIENT_SECRET) {
 const encodedAuth = Buffer.from(`${SKINPORT_CLIENT_ID}:${SKINPORT_CLIENT_SECRET}`).toString('base64');
 const AUTH_HEADER = `Basic ${encodedAuth}`;
 
-export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
-    const cachedItems = await redisClient.get('items');
+export const fetchItemsFromSkinport = async (): Promise<{ 
+    tradable: Item | null; 
+    nonTradable: Item | null 
+}> => {
+    const cachedItems = await redisClient.get('min_price_items');
 
     if (cachedItems) {
-        return JSON.parse(cachedItems) as Item[];
+        return JSON.parse(cachedItems) as { tradable: Item | null; nonTradable: Item | null };
     }
 
     const response = await axios.get<Item[]>(
@@ -37,14 +40,35 @@ export const fetchItemsFromSkinport = async (): Promise<Item[]> => {
         throw new Error('Invalid data format from Skinport API');
     }
 
-    const items: Item[] = response.data.map((item: Item) => ({
-        market_hash_name: item.market_hash_name,
-        min_price: item.min_price || null,
-        max_price: item.max_price || null,
-        quantity: item.quantity ?? 0
-    }));
+    /**
+     * Find the item with the lowest price in the specified category
+     * @param items - list of items
+     * @param isTradable - condition to check tradability
+     */
+    const findMinPriceItem = (items: Item[], isTradable: boolean): Item | null => {
+        const filteredItems = items.filter(item => 
+            (isTradable ? item.quantity > 0 : item.quantity === 0)
+        );
 
-    await redisClient.set('items', JSON.stringify(items), { EX: 300 });
+        if (filteredItems.length === 0) {
+            return null;
+        }
 
-    return items;
+        return filteredItems.reduce((minItem, item) => 
+            minItem.min_price !== null && 
+            item.min_price !== null && 
+            minItem.min_price < item.min_price ? minItem : item
+        );
+    };
+
+    // Retrieve the items with minimum prices for both tradable and non-tradable items
+    const tradableItem = findMinPriceItem(response.data, true);
+    const nonTradableItem = findMinPriceItem(response.data, false);
+
+    const result = { tradable: tradableItem, nonTradable: nonTradableItem };
+
+    // Cache the result for 5 minutes
+    await redisClient.set('min_price_items', JSON.stringify(result), { EX: 300 });
+
+    return result;
 };
