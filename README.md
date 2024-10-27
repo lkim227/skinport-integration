@@ -25,11 +25,16 @@ This project demonstrates a web server built with TypeScript, PostgreSQL, Redis,
   docker-compose up --build
 3. The server will be running at `http://localhost:3000`.
 
+
 ## Running Tests
 
-To run the unit and e2e tests:
+To run the unit test:
     ```bash
-    npm run test
+    docker-compose exec app npm run test:unit
+
+To run the e2e test:
+    ```bash
+    docker-compose exec app npm run test:e2e
 
 ## API Endpoints
 - POST /auth/login - Authenticate a user
