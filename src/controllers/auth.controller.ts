@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { authenticateUser, changePassword } from '../services/auth.service';
 
 const JWT_SECRET: string = process.env.JWT_SECRET || 'your_jwt_secret_key';
@@ -30,9 +30,19 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 export const handleChangePassword = async (req: Request, res: Response) => {
     try {
-        const { userId, newPassword } = req.body;
-        const result = await changePassword(userId, newPassword);
-        res.json(result);
+        // Get the user payload from the decoded token
+        const user = res.locals.user as JwtPayload;
+
+        // Ensure user is defined and has an id
+        if (!user || typeof user.id !== 'number') {
+            res.status(403).json({ message: 'Forbidden: Invalid user token' });
+            return;
+        }
+
+        const { newPassword } = req.body;
+        const result = await changePassword(user.id, newPassword);
+
+        res.json({ message: result });
     } catch (error) {
         if (error instanceof Error) {
             res.status(401).json({ message: error.message });
