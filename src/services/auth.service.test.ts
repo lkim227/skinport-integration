@@ -14,7 +14,11 @@ describe('Auth Service', () => {
 
     describe('authenticateUser', () => {
         it('should return user data for valid credentials', async () => {
-            const mockUser = { id: 1, email: 'test@example.com', password: 'password', balance: 100 };
+            const mockUser = { 
+                id: 1, 
+                email: 'test@example.com', 
+                password: 'password', 
+                balance: 100 };
 
             // Mock getUserByEmail to return a valid user
             vi.mocked(getUserByEmail).mockResolvedValue(mockUser);
@@ -49,7 +53,12 @@ describe('Auth Service', () => {
 
     describe('changePassword', () => {
         it('should update password for a valid user', async () => {
-            const mockUser = { id: 1, email: 'test@example.com', password: 'newpassword', balance: 100 };
+            const mockUser = { 
+                id: 1, 
+                email: 'test@example.com', 
+                password: 'newpassword', 
+                balance: 100 
+            };
 
             // Mock updateUserPassword to return a user object
             vi.mocked(updateUserPassword).mockResolvedValue(mockUser);

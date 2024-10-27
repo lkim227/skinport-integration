@@ -11,6 +11,6 @@ export const handlePurchase = async(req: Request, res: Response) => {
         if (error instanceof Error) 
             res.status(400).json({ message: error.message });
         else 
-            res.status(500).json({ message: 'Unknown error occured' });
+            res.status(500).json({ message: 'Unknown error occurred' });
     }
 }

@@ -13,7 +13,7 @@ describe('Items Controller', () => {
         json: vi.fn(),
         status: vi.fn(() => mockResponse),
         locals: {
-            user: { id: 1, email: 'test@example.com' },  // Mock user object
+            user: { id: 1, email: 'test@example.com' }
         },
     } as unknown as Response;
 
