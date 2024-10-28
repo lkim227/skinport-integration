@@ -32,13 +32,13 @@ export const handleChangePassword = async (req: Request, res: Response) => {
     try {
         // Get the user payload from the decoded token
         const user = res.locals.user as JwtPayload;
-
         if (!user || typeof user.id !== 'number') {
             res.status(403).json({ message: 'Forbidden: Invalid user token' });
             return;
         }
 
         const { newPassword } = req.body;
+        console.log("authcontroller:", user);
         const result = await changePassword(user.id, newPassword);
 
         res.json({ message: result });

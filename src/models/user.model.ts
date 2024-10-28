@@ -19,7 +19,6 @@ export const updateUserPassword = async (
         UPDATE users SET password = ${newPassword} WHERE id = ${userId}
         RETURNING *;
     `;
-
     return updatedUser[0] || null;
 };
 

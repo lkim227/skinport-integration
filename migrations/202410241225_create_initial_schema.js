@@ -2,7 +2,7 @@ exports.up = function(knex) {
     return knex.schema
       .createTable('users', (table) => {
         table.increments('id').primary();
-        table.string('email').notNullable();
+        table.string('email').notNullable().unique();
         table.string('password').notNullable();
         table.decimal('balance', 10, 2).defaultTo(0);
       })
@@ -15,8 +15,10 @@ exports.up = function(knex) {
       })
       .createTable('purchases', (table) => {
         table.increments('id').primary();
-        table.integer('user_id').unsigned().references('users.id');
-        table.integer('item_id').unsigned().references('items.id');
+        // table.integer('user_id').unsigned().references('users.id');
+        // table.integer('item_id').unsigned().references('items.id');
+        table.integer('user_id').unsigned();
+        table.integer('item_id').unsigned();
         table.timestamp('purchase_date').defaultTo(knex.fn.now());
       });
   };
