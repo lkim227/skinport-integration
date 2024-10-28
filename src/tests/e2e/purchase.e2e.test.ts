@@ -20,6 +20,7 @@ const mockItem = {
 
 describe('Purchase E2E Tests', () => {
     beforeAll(async () => {
+        await db`SELECT 1`;
         await db`
             INSERT INTO users (email, password, balance)
             VALUES (${mockUser.email}, ${mockUser.password}, ${mockUser.balance})
@@ -39,26 +40,28 @@ describe('Purchase E2E Tests', () => {
         await db`DELETE FROM items WHERE id = ${mockItem.itemId}`;
     });
 
-    // it('should successfully purchase an item and update the balance', async () => {
-    //     const user = await getUserByEmail(mockUser.email);
-    //     if (!user) throw new Error("User setup failed"); // Ensure the user exists
+    it('should successfully purchase an item and update the balance', async () => {
+        let user = await getUserByEmail(mockUser.email);
+        if (!user) throw new Error("User setup failed"); // Ensure the user exists
 
-    //     const response = await request(app)
-    //         .post('/purchase')
-    //         .send({
-    //             userEmail: mockUser.email,
-    //             itemId: mockItem.itemId,
-    //             price: mockItem.min_price
-    //         });
-    //     expect(response.status).toBe(200);
-    //     expect(response.body).toHaveProperty('newBalance');
+        const response = await request(app)
+            .post('/purchase')
+            .send({
+                userEmail: mockUser.email,
+                itemId: mockItem.itemId,
+                price: mockItem.min_price
+            });
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('newBalance');
 
-    //     const newBalance = mockUser.balance - mockItem.min_price;
-    //     expect(newBalance).toBe(response);
+        user = await getUserByEmail(mockUser.email);
+        if (!user) throw new Error("User setup failed");
+        const newBalance = (mockUser.balance - mockItem.min_price).toFixed(2);
+        expect(newBalance).toBe(user.balance);
 
-    //     const updatedUser = await getUserByEmail(mockUser.email);
-    //     expect(updatedUser?.balance).toBe(newBalance);
-    // });
+        const updatedUser = await getUserByEmail(mockUser.email);
+        expect(updatedUser?.balance).toBe(newBalance);
+    });
 // there is no sign up an user function now - disable this at this moment
     // it('should fail to purchase an item due to insufficient balance', async () => {
     //     const user = await getUserByEmail(mockUser.email);
