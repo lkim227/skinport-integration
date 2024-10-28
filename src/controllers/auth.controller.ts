@@ -38,7 +38,6 @@ export const handleChangePassword = async (req: Request, res: Response) => {
         }
 
         const { newPassword } = req.body;
-        console.log("authcontroller:", user);
         const result = await changePassword(user.id, newPassword);
 
         res.json({ message: result });

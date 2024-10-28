@@ -25,8 +25,8 @@ export const changePassword = async (
     userId: number, 
     newPassword: string
 ): Promise<string> => {
-    await updateUserPassword(userId, newPassword);
-    // if (!user)   throw new Error('User not found');
+    const user = await updateUserPassword(userId, newPassword);
+    if (!user)   throw new Error('User not found');
     
     return 'Password updated successfully';
 };

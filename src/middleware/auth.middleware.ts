@@ -16,7 +16,6 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): P
     try {
         const decoded: string | JwtPayload = jwt.verify(token, JWT_SECRET);
         res.locals.user = decoded;
-        console.log("Middleware executed: ", res.locals.user);
         next();
         return Promise.resolve();
     } catch (err) {

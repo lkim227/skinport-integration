@@ -3,7 +3,6 @@ import { purchaseItem } from '../services/purchase.service';
 
 export const handlePurchase = async(req: Request, res: Response) => {
     try {
-        console.log("test:::", req.body);
         const { userEmail, itemId, price } = req.body;
         const result = await purchaseItem(userEmail, itemId, price);
 

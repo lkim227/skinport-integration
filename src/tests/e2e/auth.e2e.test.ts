@@ -75,7 +75,6 @@ describe('Auth E2E Tests', () => {
 
         // Verify that the password has been updated in the database
         const user = await db`SELECT * FROM users WHERE email = ${mockUser.email}`;
-        console.log("auth test: ", user);
         expect(user[0].password).toBe(newPassword); // Assuming plain text for testing; in real scenarios, passwords should be hashed
     });
 

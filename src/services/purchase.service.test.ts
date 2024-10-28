@@ -58,9 +58,5 @@ describe('purchaseItem', () => {
         expect(makePurchase).toHaveBeenCalledWith(mockUser.id, 101); // Confirm `makePurchase` is called correctly
         expect(updateUserBalance).toHaveBeenCalledWith(mockUser.id, newBalance);
         expect(result).toEqual({ newBalance });
-    
-        // Temporary Debugging Logs
-        console.log("MockUser ID:", mockUser.id);
-        console.log("Expected makePurchase call with:", mockUser.id, 101);
     });
 });
