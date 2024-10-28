@@ -9,8 +9,9 @@ exports.up = function(knex) {
       .createTable('items', (table) => {
         table.increments('id').primary();
         table.string('name').notNullable();
-        table.decimal('tradable_price', 10, 2);
-        table.decimal('non_tradable_price', 10, 2);
+        table.decimal('min_price', 10, 2);
+        table.decimal('max_price', 10, 2);
+        table.integer('quantity').unsigned();
       })
       .createTable('purchases', (table) => {
         table.increments('id').primary();
