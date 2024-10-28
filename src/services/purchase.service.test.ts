@@ -20,7 +20,7 @@ describe('purchaseItem', () => {
     });
 
     it('should throw an error if the user is not found', async () => {
-        vi.mocked(getUserByEmail).mockResolvedValueOnce(null); // User not found
+        vi.mocked(getUserByEmail).mockResolvedValueOnce(null); 
 
         await expect(purchaseItem('test@example.com', 101, 50)).rejects.toThrow('User not found');
         
@@ -46,15 +46,16 @@ describe('purchaseItem', () => {
         const mockUser: User = { id: 1, email: 'test@example.com', password: 'password123', balance: 200 };
         const mockPurchase = { id: 1, user_id: 1, item_id: 101, purchase_date: new Date().toISOString() };
         const newBalance = mockUser.balance - 50;
-
+    
         vi.mocked(getUserByEmail).mockResolvedValueOnce(mockUser);
         vi.mocked(makePurchase).mockResolvedValueOnce(mockPurchase);
         vi.mocked(updateUserBalance).mockResolvedValueOnce(null); // Assuming update doesn't return anything
-
+    
         const result = await purchaseItem('test@example.com', 101, 50);
-
+    
+        // Assertions
         expect(getUserByEmail).toHaveBeenCalledWith('test@example.com');
-        expect(makePurchase).toHaveBeenCalledWith(mockUser.id, 101);
+        expect(makePurchase).toHaveBeenCalledWith(mockUser.id, 101); // Confirm `makePurchase` is called correctly
         expect(updateUserBalance).toHaveBeenCalledWith(mockUser.id, newBalance);
         expect(result).toEqual({ newBalance });
     });

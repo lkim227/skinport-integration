@@ -11,7 +11,7 @@ vi.mock('../services/purchase.service', () => ({
 
 describe('Purchase Controller', () => {
     const mockRequest = {
-        body: { userId: 1, itemId: 101, price: 50 },
+        body: { userEmail: 'test@example.com', itemId: 101, price: 50 },
     } as Partial<Request>;
 
     const mockResponse = {
@@ -26,10 +26,10 @@ describe('Purchase Controller', () => {
     it('should return purchase result on successful purchase', async () => {
         const mockResponseData = { newBalance: 150 };
         vi.mocked(purchaseItem).mockResolvedValueOnce(mockResponseData);
-
+    
         await handlePurchase(mockRequest as Request, mockResponse);
-
-        expect(purchaseItem).toHaveBeenCalledWith(1, 101, 50);
+    
+        expect(purchaseItem).toHaveBeenCalledWith('test@example.com', 101, 50); 
         expect(mockResponse.json).toHaveBeenCalledWith(mockResponseData);
         expect(mockResponse.status).not.toHaveBeenCalled();
     });
@@ -40,7 +40,7 @@ describe('Purchase Controller', () => {
 
         await handlePurchase(mockRequest as Request, mockResponse);
 
-        expect(purchaseItem).toHaveBeenCalledWith(1, 101, 50);
+        expect(purchaseItem).toHaveBeenCalledWith('test@example.com', 101, 50);
         expect(mockResponse.status).toHaveBeenCalledWith(400);
         expect(mockResponse.json).toHaveBeenCalledWith({ message: errorMessage });
     });
@@ -50,7 +50,7 @@ describe('Purchase Controller', () => {
 
         await handlePurchase(mockRequest as Request, mockResponse);
 
-        expect(purchaseItem).toHaveBeenCalledWith(1, 101, 50);
+        expect(purchaseItem).toHaveBeenCalledWith('test@example.com', 101, 50);
         expect(mockResponse.status).toHaveBeenCalledWith(500);
         expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Unknown error occurred' });
     });

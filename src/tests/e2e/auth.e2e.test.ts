@@ -10,11 +10,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 describe('Auth E2E Tests', () => {
     let token: string;
     const mockUser = {
-        email: 'test@example.com',
+        email: 'test1@example.com',
         password: 'password123'
     };
 
     beforeAll(async () => {
+        await db`SELECT 1`;
         // Insert a mock user into the users table if it does not already exist
         await db`
             INSERT INTO users (email, password, balance)
