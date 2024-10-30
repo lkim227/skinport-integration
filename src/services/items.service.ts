@@ -35,7 +35,6 @@ export const fetchItemsFromSkinport = async (): Promise<{
             }
         }
     );
-
     if (!Array.isArray(response.data)) {
         throw new Error('Invalid data format from Skinport API');
     }

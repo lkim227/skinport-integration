@@ -28,6 +28,7 @@ This project demonstrates a web server built with TypeScript, PostgreSQL, Redis,
 2. Run the application using Docker Compose, which will build the necessary containers and apply database migrations:
 
    ```bash
+   npm install
    docker-compose up --build
    ```
 

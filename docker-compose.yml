@@ -15,10 +15,15 @@ services:
       - redis
       - migrate
     volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/dist
+      - .:/app  # Mount project source code
+      - /app/node_modules  # Persist node_modules within container
     command: npm run start
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"  # Limit to 0.5 CPU
+          memory: "512M"  # Limit to 512MB of RAM
+    restart: always
 
   migrate:
     build: .
@@ -33,8 +38,13 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - /app/dist
     command: npx knex migrate:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: "256M"
+    restart: on-failure
 
   db:
     image: postgres:14-alpine
@@ -51,11 +61,23 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+    restart: always
 
   redis:
     image: redis:6.2-alpine
     ports:
       - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: "256M"
+    restart: always
 
 volumes:
   db_data:
