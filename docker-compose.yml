@@ -17,6 +17,7 @@ services:
     volumes:
       - .:/app  # Mount project source code
       - /app/node_modules  # Persist node_modules within container
+      - /app/dist
     command: npm run start
     deploy:
       resources:
@@ -38,6 +39,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/dist
     command: npx knex migrate:latest
     deploy:
       resources:
